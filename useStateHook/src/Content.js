@@ -1,5 +1,6 @@
 import { useState } from "react";
-import {FaRegTrashCan} from 'react-icons/fa6'
+import { FaRegTrashCan } from "react-icons/fa6";
+
 import "./content.css";
 
 const Content = () => {
@@ -27,36 +28,51 @@ const Content = () => {
     },
   ]);
 
-  // // const name = 'basirah'
+  const handleCheck = (value) => {
+    // console.log(`key: ${id}`)
+    const listItems = items.map((item) =>
+      item.id === value ? { ...item, checked: !item.checked } : item
+    );
+    setItems(listItems);
+    localStorage.setItem("shoppinglist", JSON.stringify(listItems));
+  };
 
-  // const handleNameChange = () => {
-  //   const names = ["Zainabuuuuu", "Hoyee", "Eef"];
-  //   const int = Math.floor(Math.random() * 3);
-  //   setName(names[int])
-  // };
-
-  // const handleClick2 = (name) => {
-  //   console.log(`${name} was clicked`)
-  // }
-
+  const handleDelete = (id) => {
+    const listItems = items.filter((item) => item.id !== id);
+    setItems(listItems);
+  }
   return (
     <main className="student">
-      {/* <h1>{name}</h1>
-      <button onClick={handleNameChange}>Change Name</button>
-      <button onDoubleClick={() =>  handleClick2('hayzed')}>Click me</button> */}
+     {items.length ? (
+       <ul>
+       {items.map((item) => {
+         return (
+           <li className="item" key={item.id}>
+             <input
+               type="checkbox"
+               onClick={() => handleCheck(item.id)}
+               checked={item.checked}
+             />
 
-      <ul>
-        {items.map((item) => {
-          return (
-            <li className="item" key={item.id}>
-              <input type="checkbox" checked={item.checked} />
+             <label
+             style={(item.checked) ? {textDecoration: "line-through"} : null}
+             onDoubleClick={()=> handleDelete(item.id)}
+             >{item.item}</label>
+             <FaRegTrashCan 
+             onClick={() => handleDelete(item.id)}
+             role="button"
+             tabIndex="0"
+             />
+               
+           </li>
+         );
+       })}
+     </ul>
 
-              <label>{item.item}</label>
-              <FaRegTrashCan/>
-            </li>
-          );
-        })}
-      </ul>
+     ) : (
+      <p style={{marginTop: "2rem"}}>Your list is empty</p>
+
+     )}
     </main>
   );
 };
